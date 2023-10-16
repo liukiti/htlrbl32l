@@ -107,7 +107,7 @@
 /*!
  * Default uplink dwell time configuration
  */
-#define AU915_DEFAULT_UPLINK_DWELL_TIME             1
+#define AU915_DEFAULT_UPLINK_DWELL_TIME             0
 
 /*!
  * Default downlink dwell time configuration
@@ -147,12 +147,12 @@
 /*!
  * Receive delay 1
  */
-#define AU915_RECEIVE_DELAY1                        700   
+#define AU915_RECEIVE_DELAY1                        5000
 
 /*!
  * Receive delay 2
  */
-#define AU915_RECEIVE_DELAY2                        1700
+#define AU915_RECEIVE_DELAY2                        6000
 
 /*!
  * Join accept delay 1

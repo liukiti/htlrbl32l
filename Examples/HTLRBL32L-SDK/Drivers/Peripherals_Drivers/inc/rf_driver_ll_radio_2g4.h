@@ -28,7 +28,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "bluenrg_lpx.h"
-#include "system_BlueNRG_LP.h"
+#include <system_bluenrg_lp.h>
 
 /** @addtogroup RF_DRIVER_LL_Driver
   * @{
@@ -456,7 +456,7 @@
 #define TXRX                        0x02
     
 /* The bit determines if the action (RX or TX) is going to be executed based on the back-to-back time or based on the WakeupTime.
- * 0: Based on the back-to-back time (default 150 µs).
+ * 0: Based on the back-to-back time (default 150 ï¿½s).
  * 1: Based on the WakeupTime.
 */
 #define TIMER_WAKEUP                0x04

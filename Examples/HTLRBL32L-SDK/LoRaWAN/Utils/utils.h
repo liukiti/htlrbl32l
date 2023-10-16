@@ -11,11 +11,11 @@
 
 
 #include "rf_driver_hal.h"
-#include "system_BlueNRG_LP.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <system_bluenrg_lp.h>
 
 
 void utils_printf(char _out[]);

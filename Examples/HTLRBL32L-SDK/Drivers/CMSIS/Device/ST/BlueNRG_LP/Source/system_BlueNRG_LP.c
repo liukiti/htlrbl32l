@@ -14,8 +14,8 @@
 *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/
+#include <system_bluenrg_lp.h>
 #include "bluenrg_lpx.h"
-#include "system_BlueNRG_LP.h"
 #include "rf_driver_ll_rcc.h"
 #include "rf_driver_ll_pwr.h"
 #include "rf_driver_ll_flash.h"

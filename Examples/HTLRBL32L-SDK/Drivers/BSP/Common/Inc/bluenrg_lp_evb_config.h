@@ -65,7 +65,7 @@
   */ 
 
 /* BlueNRG-LP Development platform: STEVAL-IDB011V1 */
-#include "system_BlueNRG_LP.h"
+#include <system_bluenrg_lp.h>
 
 #if defined(STEVAL_IDB010V1)
 /* BlueNRG-LP CSP eval kit */

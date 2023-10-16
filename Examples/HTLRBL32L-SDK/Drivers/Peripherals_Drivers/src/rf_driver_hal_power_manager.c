@@ -14,7 +14,7 @@
 *******************************************************************************/
 #include <stdlib.h>
 #include <string.h>
-#include "system_BlueNRG_LP.h"
+#include <system_bluenrg_lp.h>
 #include "rf_driver_ll_bus.h"
 #include "rf_driver_ll_rcc.h"
 #include "rf_driver_ll_system.h"

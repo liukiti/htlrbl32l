@@ -28,7 +28,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "rf_driver_ll_system.h"
-#include "system_BlueNRG_LP.h"
+#include <system_bluenrg_lp.h>
 #include "bluenrg_lp_hal_conf.h"
    
 /** @addtogroup RF_DRIVER_HAL_Driver

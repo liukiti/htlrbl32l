@@ -19,10 +19,10 @@
 ******************************************************************************
 */ 
 /* Includes ------------------------------------------------------------------*/
+#include <system_bluenrg_lp.h>
 #include "rf_driver_ll_system.h"
 #include "rf_driver_ll_utils.h"
 #include "rf_driver_ll_bus.h"
-#include "system_BlueNRG_LP.h"
 #include "miscutil.h"
 #include "hal_miscutil.h"
 #include "bleplat.h"

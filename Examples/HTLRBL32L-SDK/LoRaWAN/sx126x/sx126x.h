@@ -143,6 +143,16 @@
  */
 #define REG_OCP                                     0x08E7
 
+
+/*!
+ * \brief RTC control
+ */
+#define REG_RTC_CTRL                                0x0902
+/*!
+ * \brief Event clear
+ */
+#define REG_EVT_CLR                                 0x0944
+
 /*!
  * \brief Structure describing the radio status
  */
