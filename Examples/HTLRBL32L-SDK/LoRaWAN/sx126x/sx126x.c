@@ -161,11 +161,11 @@ uint8_t SX126xGetPayload( uint8_t *buffer, uint8_t *size,  uint8_t maxSize )
 
 void SX126xSendPayload( uint8_t *payload, uint8_t size, uint32_t timeout )
 {
-	printf("payload: ");
+	printf("[%u] payload: ", HAL_GetTick());
 	for(int x=0;x<size;x++){
 		printf("%02x",payload[x]);
 	}
-	printf("\n");
+	printf("\r\n");
     SX126xSetPayload( payload, size );
 
     SX126xSetTx( timeout );
@@ -467,7 +467,7 @@ void SX126xSetDio3AsTcxoCtrl( RadioTcxoCtrlVoltage_t tcxoVoltage, uint32_t timeo
 void SX126xSetRfFrequency( uint32_t frequency )
 {
 
-		printf("Frequency: %u\n",frequency);
+	printf("[%u] Frequency: %u | ", HAL_GetTick(), frequency);
     uint8_t buf[4];
     uint32_t freq = 0;
 

@@ -146,7 +146,7 @@ static uint8_t CountNbOfEnabledChannels( uint8_t datarate, uint16_t* channelsMas
 {
     uint8_t nbEnabledChannels = 0;
     uint8_t delayTransmission = 0;
-    printf("AU915 Enabled Channels: ");
+//    printf("AU915 Enabled Channels: ");
     for( uint8_t i = 0, k = 0; i < AU915_MAX_NB_CHANNELS; i += 16, k++ )
     {
         for( uint8_t j = 0; j < 16; j++ )
@@ -169,14 +169,14 @@ static uint8_t CountNbOfEnabledChannels( uint8_t datarate, uint16_t* channelsMas
                 }
                 enabledChannels[nbEnabledChannels++] = i + j;
 
-                printf("Channel: %d freq: %lu | ", i + j,channels[i+j].Frequency);
+                //printf("Channel: %d freq: %lu | ", i + j,channels[i+j].Frequency);
 
 
             }
         }
 
     }
-    printf("\n");
+//    printf("\n");
     *delayTx = delayTransmission;
     return nbEnabledChannels;
 }

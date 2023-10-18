@@ -896,7 +896,7 @@ static void ProcessRadioTxDone( void )
 				//sleeps LoRa Radio
         Radio.Sleep( );
     }
-	printf("RX1 Delay: %lu  RX2 Delay: %lu\n",MacCtx.RxWindow1Delay,MacCtx.RxWindow2Delay);
+	printf("[%u] RX1 Delay: %lu  RX2 Delay: %lu\r\n",HAL_GetTick(), MacCtx.RxWindow1Delay,MacCtx.RxWindow2Delay);
 //		printf("time: %u\n",TimerGetCurrentTime());
 		/* RX1 window timer settings */
     TimerSetValue( &MacCtx.RxWindowTimer1, MacCtx.RxWindow1Delay );
@@ -965,11 +965,12 @@ static void ProcessRadioRxDone( void )
     int16_t rssi = RxDoneParams.Rssi;
     int8_t snr = RxDoneParams.Snr;
 
-		printf("LoRaWAN Payload Received: \n");
-		for(uint8_t x=0; x<size;x++){
-				printf("%02x",payload[x]);
-		}
-    printf(" Size: %u, rssi: %d, snr :%d\n",size,rssi,snr);
+	printf("[%u] LRW RX | rssi:%d | snr:%d | payload[%u]: ", HAL_GetTick(), rssi, snr, size);
+	for(uint8_t x=0; x<size;x++)
+		printf("%02x",payload[x]);
+    printf("\r\n");
+	HT_PB_SetRxLRWSNR(snr);
+	HT_PB_SetRxLRWRSSI(rssi);
 		
 	
     uint8_t pktHeaderLen = 0;
@@ -1025,7 +1026,7 @@ static void ProcessRadioRxDone( void )
 
     macHdr.Value = payload[pktHeaderLen++];
 
-    printf("Received CMD Type: %u\n\n",macHdr.Bits.MType);
+    printf("[%u] Received CMD Type: %u\r\n", HAL_GetTick(), macHdr.Bits.MType);
     switch( macHdr.Bits.MType )
     {
         case FRAME_TYPE_JOIN_ACCEPT:
@@ -1447,41 +1448,6 @@ static void ProcessRadioRxTimeout( void )
     HandleRadioRxErrorTimeout( LORAMAC_EVENT_INFO_STATUS_RX1_TIMEOUT, LORAMAC_EVENT_INFO_STATUS_RX2_TIMEOUT );
 }
 
-static void ProcessRadioTxDoneP2P(void)
-{
-	Radio.SetChannel(COMMAND_FREQ);
-	Radio.Rx(RX_TIMEOUT_VALUE);
-	printf("[%d] OnTxDone\n\r", HAL_GetTick());
-}
-
-static void ProcessRadioRxDoneP2P(void)
-{
-	printf("[%d] OnRxDone\n\r", HAL_GetTick());
-
-
-}
-
-static void ProcessRadioTxTimeoutP2P(void)
-{
-	printf("[%d] OnTxTimeout\n\r", HAL_GetTick());
-	HT_GPIO_EnableButtonIRQN();
-	HT_PB_SetLoraProcess(PROCESS_LORA_READY);
-}
-
-static void ProcessRadioRxErrorP2P(void)
-{
-	printf("[%d] OnRxError\n\r", HAL_GetTick());
-	HT_GPIO_EnableButtonIRQN();
-	HT_PB_SetLoraProcess(PROCESS_LORA_READY);
-}
-
-static void ProcessRadioRxTimeoutP2P(void)
-{
-	printf("[%d] OnRxTimeout\n\r", HAL_GetTick());
-	HT_PB_SetState(SM_SEND_FRAME);
-
-}
-
 static void LoRaMacHandleIrqEvents( void )
 {
     LoRaMacRadioEvents_t events;
@@ -1496,49 +1462,77 @@ static void LoRaMacHandleIrqEvents( void )
     {
         if( events.Events.TxDone == 1 )
         {
-        	printf("TX Done\n");
             if(MacCtx.NvmCtx->PublicNetwork)
+            {
+            	printf("[%u] TX Done LRW\r\n", HAL_GetTick() );
             	ProcessRadioTxDone( );
+            }
             else
-            	ProcessRadioTxDoneP2P( );
+            {
+            	printf("[%u] TX Done P2P\r\n", HAL_GetTick() );
+            	HT_PB_SetState(SM_TX_DONE_P2P);
+            }
         }
         if( events.Events.RxDone == 1 )
         {
-			printf("RX Done\n");
             if(MacCtx.NvmCtx->PublicNetwork)
             {
-            	HT_PB_SetState(SM_RX_LORA);
+				printf("[%u] RX Done LRW\r\n", HAL_GetTick());
+            	HT_PB_SetState(SM_RX_DONE_LRW);
             	ProcessRadioRxDone( );
             }
             else
-            	ProcessRadioRxDoneP2P( );
+            {
+				printf("[%u] RX Done P2P\r\n", HAL_GetTick());
+            	RX_Packet_t rxData;
+				memcpy(&rxData.payload,RxDoneParams.Payload, sizeof(rxData.payload));
+				rxData.size = RxDoneParams.Size;
+				rxData.rssi = RxDoneParams.Rssi;
+				rxData.snr = RxDoneParams.Snr;
+				HT_PB_SetRxP2P(&rxData);
+				HT_PB_SetState(SM_RX_DONE_P2P);
+            }
+
         }
         if( events.Events.TxTimeout == 1 )
         {
-			printf("TX Timeout\n");
             if(MacCtx.NvmCtx->PublicNetwork)
+            {
+				printf("[%u] TX Timeout LRW\r\n", HAL_GetTick());
             	ProcessRadioTxTimeout( );
+            }
             else
-            	ProcessRadioTxTimeoutP2P( );
+            {
+            	printf("[%u] TX Timeout P2P\r\n", HAL_GetTick());
+            	HT_PB_SetState(SM_TX_TIMEOUT_P2P);
+            }
         }
         if( events.Events.RxError == 1 )
         {
-			printf("RX Error\n");
             if(MacCtx.NvmCtx->PublicNetwork)
+            {
+            	printf("[%u] RX Error LRW\r\n", HAL_GetTick());
             	ProcessRadioRxError( );
+            }
             else
-            	ProcessRadioRxErrorP2P( );
+            {
+            	printf("[%u] RX Error P2P\r\n", HAL_GetTick());
+            	HT_PB_SetState(SM_RX_ERROR_P2P);
+            }
         }
         if( events.Events.RxTimeout == 1 )
         {
-			printf("RX Timeout\n");
             if(MacCtx.NvmCtx->PublicNetwork)
             {
+				printf("[%u] RX Timeout LRW\r\n", HAL_GetTick());
             	ProcessRadioRxTimeout( );
-            	HT_PB_SetState(SM_RX_TIMEOUT);
+            	HT_PB_SetState(SM_RX_TIMEOUT_LRW);
             }
             else
-            	ProcessRadioRxTimeoutP2P( );
+            {
+				printf("[%u] RX Timeout P2P\r\n", HAL_GetTick());
+            	HT_PB_SetState(SM_RX_TIMEOUT_P2P);
+            }
         }
 
     }
@@ -1817,7 +1811,7 @@ static void OnTxDelayedTimerEvent( void* context )
 static void OnRxWindow1TimerEvent( void* context )
 {
 
-	printf("\n-RX1-\n");
+	printf("[%u] --------- LRW RX1 ---------\r\n", HAL_GetTick());
     MacCtx.RxWindow1Config.Channel = MacCtx.Channel;
     MacCtx.RxWindow1Config.DrOffset = MacCtx.NvmCtx->MacParams.Rx1DrOffset;
     MacCtx.RxWindow1Config.DownlinkDwellTime = MacCtx.NvmCtx->MacParams.DownlinkDwellTime;
@@ -1833,7 +1827,7 @@ static void OnRxWindow2TimerEvent( void* context )
     // Check if we are processing Rx1 window.
     // If yes, we don't setup the Rx2 window.
 	HT_PB_SetLoraProcess(PROCESS_LORA_RX_WINDOW_2);
-	printf("\n-RX2-\n");
+	printf("[%u] --------- LRW RX2 ---------\r\n", HAL_GetTick());
     if( MacCtx.RxSlot == RX_SLOT_WIN_1 )
     {
     	printf("RxWindow2ERROR\n");
@@ -2799,7 +2793,7 @@ LoRaMacStatus_t PrepareFrame( LoRaMacHeader_t* macHdr, LoRaMacFrameCtrl_t* fCtrl
             // Reset confirm parameters
             MacCtx.McpsConfirm.NbRetries = 0;
             MacCtx.McpsConfirm.AckReceived = false;
-			printf("Uplink Counter: %d\n",fCntUp);
+			printf("[%u] Uplink Counter: %d\r\n", HAL_GetTick(), fCntUp);
             MacCtx.McpsConfirm.UpLinkCounter = fCntUp;
 
             // Handle the MAC commands if there are any available

@@ -680,7 +680,7 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
 			
 			
 			
-			printf("Setting RX  FSK configs | Datarate: %u | bandwidth: %u \n",datarate, RadioGetFskBandwidthRegValue( bandwidth ) );
+			printf("Setting RX  FSK configs | Datarate: %u | bandwidth: %u \n", datarate, RadioGetFskBandwidthRegValue( bandwidth ) );
             SX126xSetStopRxTimerOnPreambleDetect( false);
             SX126x.ModulationParams.PacketType = PACKET_TYPE_GFSK;
 
@@ -718,7 +718,7 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
             break;
 
         case MODEM_LORA:
-			printf("Setting RX configs | SF: %u | bandwidth: %s | coderate: %s \n",
+			printf("Setting RX configs | SF: %u | BW: %s | CR: %s \r\n",
 			datarate, bandwidthString[bandwidth], coderateString[coderate] );
             SX126xSetStopRxTimerOnPreambleDetect( false );  
             SX126xSetLoRaSymbNumTimeout( symbTimeout ); 
@@ -833,7 +833,7 @@ void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
 //				coderate=LORA_CR_4_7;
 //			}
 
-			printf("Setting TX Configs: Power: %d | SF: %u  | bandwidth: %s | coderate: %s \n", power, datarate, bandwidthString[bandwidth], coderateString[coderate]);
+			printf("Setting TX Configs: Power: %d | SF: %u  | BW: %s | CR: %s \r\n", power, datarate, bandwidthString[bandwidth], coderateString[coderate]);
 
 			SX126x.ModulationParams.PacketType = PACKET_TYPE_LORA;
             SX126x.ModulationParams.Params.LoRa.SpreadingFactor = ( RadioLoRaSpreadingFactors_t ) datarate;
@@ -970,7 +970,7 @@ void RadioStandby( void )
 
 void RadioRx( uint32_t timeout )
 {
-	  printf("LoRaWAN RX open for %lu ms \n",timeout);
+	printf("[%u] RX open for %lu ms \r\n",HAL_GetTick(), timeout);
     SX126xSetDioIrqParams( IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_NONE,
@@ -1139,7 +1139,7 @@ void RadioOnTxTimeoutIrq( void* context )
 
 void RadioOnRxTimeoutIrq( void* context )
 {
-		printf("Software - ");
+//		printf("Software - ");
     if( ( RadioEvents != NULL ) && ( RadioEvents->RxTimeout != NULL ) )
     {
 
@@ -1296,20 +1296,20 @@ void RadioIrqProcess( void )
         {
 //					printf("preamble time: %u\n",TimerGetCurrentTime());
 
-        	printf("PHY PRE OK\n\r");
+//        	printf("PHY PRE OK\r\n");
 
         }
 
         if( ( irqRegs & IRQ_SYNCWORD_VALID ) == IRQ_SYNCWORD_VALID )
         {
-        	printf("PHY SYNC OK\n\r");
+//        	printf("PHY SYNC OK\r\n");
 
         }
 
         if( ( irqRegs & IRQ_HEADER_VALID ) == IRQ_HEADER_VALID )
         {
 //					printf("hdr time: %u\n",TimerGetCurrentTime());
-        	printf("PHY HDR OK\n\r");
+//        	printf("PHY HDR OK\r\n");
 
         }
 
@@ -1323,7 +1323,7 @@ void RadioIrqProcess( void )
             }
             if( ( RadioEvents != NULL ) && ( RadioEvents->RxTimeout != NULL ) )
             {
-                printf("PHY RxTimeout\n\r");
+                printf("PHY RxTimeout\r\n");
                 RadioEvents->RxTimeout( );
             }
         }
