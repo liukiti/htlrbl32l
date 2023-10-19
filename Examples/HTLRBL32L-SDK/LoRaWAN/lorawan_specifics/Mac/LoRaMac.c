@@ -1811,7 +1811,7 @@ static void OnTxDelayedTimerEvent( void* context )
 static void OnRxWindow1TimerEvent( void* context )
 {
 
-	printf("[%u] --------- LRW RX1 ---------\r\n", HAL_GetTick());
+	printf("[%u] ------------------ LRW RX1 ------------------\r\n", HAL_GetTick());
     MacCtx.RxWindow1Config.Channel = MacCtx.Channel;
     MacCtx.RxWindow1Config.DrOffset = MacCtx.NvmCtx->MacParams.Rx1DrOffset;
     MacCtx.RxWindow1Config.DownlinkDwellTime = MacCtx.NvmCtx->MacParams.DownlinkDwellTime;
@@ -1827,7 +1827,7 @@ static void OnRxWindow2TimerEvent( void* context )
     // Check if we are processing Rx1 window.
     // If yes, we don't setup the Rx2 window.
 	HT_PB_SetLoraProcess(PROCESS_LORA_RX_WINDOW_2);
-	printf("[%u] --------- LRW RX2 ---------\r\n", HAL_GetTick());
+	printf("[%u] ------------------ LRW RX2 ------------------\r\n", HAL_GetTick());
     if( MacCtx.RxSlot == RX_SLOT_WIN_1 )
     {
     	printf("RxWindow2ERROR\n");
