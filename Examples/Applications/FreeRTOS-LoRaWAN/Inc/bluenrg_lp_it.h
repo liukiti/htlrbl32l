@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    UART/UART_Printf/Inc/UART_Printf_main.h
+  * @file    UART/UART_Printf/Inc/bluenrg_lp_it.h
   * @author  RF Application Team
-  * @brief   Header for UART_Printf_main.c module
+  * @brief   This file contains the headers of the interrupt handlers.
   ******************************************************************************
   * @attention
   *
@@ -18,63 +18,48 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
+#ifndef __BLUENRG_LP_IT_H
+#define __BLUENRG_LP_IT_H
+
+#include "BlueNRG_LP.h"
 
 #ifdef __cplusplus
-extern "C" {
-#endif
-
-/* Includes ------------------------------------------------------------------*/
-#include "rf_driver_hal.h"
-#include "rf_driver_ll_rtc.h"
-#include "utils.h"
-
+ extern "C" {
+#endif 
 
 /* Private includes ----------------------------------------------------------*/
-#include <stdio.h>
-
-#include "rf_driver_hal_dma.h"
-#include "rf_driver_hal_i2c.h"
-#include "rf_driver_hal_spi.h"
-#include "rf_driver_hal_uart.h"
-#include "rf_driver_hal_gpio.h"
-//#include "stsafea_types.h"
-
-#define FLASH_USER_START_ADDR   (FLASH_END_ADDR - FLASH_PAGE_SIZE - 0xF)        /* Start @ of user Flash area */
-#define FLASH_USER_END_ADDR     (FLASH_END_ADDR - 0xF)                          /* End @ of user Flash area */
 
 
-
-
-//extern StSafeA_Handle_t stsafea_handle;
 /* Exported types ------------------------------------------------------------*/
 
 /* Exported constants --------------------------------------------------------*/
+#define DMA_IDLE        0
+#define DMA_IN_PROGRESS 1
 
+extern uint8_t command_in_progress;
+extern uint8_t dma_state;
 /* Exported macro ------------------------------------------------------------*/
 
-/* Exported variables ---------------------------------------------------------*/
 
 /* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
+void NMI_IRQHandler(void);
+void HardFault_IRQHandler(void);
 
-void MX_GPIO_LP_Init(void);
+void SVC_IRQHandler(void);
+void PendSV_IRQHandler(void);
+void SysTick_IRQHandler(void);
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
-void HSM_Init(void);
 
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
-/* Private defines -----------------------------------------------------------*/
-
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __MAIN_H */
+#endif /* __BLUENRG_LP_IT_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

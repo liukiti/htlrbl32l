@@ -30,6 +30,14 @@ extern "C" {
 #include "rf_driver_ll_rtc.h"
 #include "utils.h"
 
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
+#include "rf_driver_hal_power_manager.h"
+#include "freertos_ble.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 #include <stdio.h>
@@ -54,7 +62,27 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 
+/* delay redefinition for FreeRTOS */
+#undef DelayMs
+#define DelayMs(n)          vTaskDelay((TickType_t)n / portTICK_PERIOD_MS)
+
+
+/* semaphore protected printf */
+#define PRINTF(...) do{ xSemaphoreTake(UARTSemaphoreHandle, portMAX_DELAY);\
+		printf(__VA_ARGS__);                              \
+		xSemaphoreGive(UARTSemaphoreHandle); }while(0)
+
 /* Exported variables ---------------------------------------------------------*/
+
+
+/* Mutex used to avoid that the LoRaWAN Stack Tick can be interrupted
+ * another thread. */
+extern SemaphoreHandle_t LoRaSemaphoreHandle;
+/* Mutex used to access UART resource */
+extern SemaphoreHandle_t UARTSemaphoreHandle;
+
+extern TaskHandle_t testHandle;
+extern TaskHandle_t loraHandle;
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
