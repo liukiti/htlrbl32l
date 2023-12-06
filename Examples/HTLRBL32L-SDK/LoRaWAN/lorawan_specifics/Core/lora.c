@@ -26,6 +26,7 @@
 #include "utils.h"
 #include "lorawan_setup.h"
 #include "ht_crypto.h"
+#include "otp.h"
 /*!
  *  Select either Device_Time_req or Beacon_Time_Req following LoRaWAN version 
  *  - Device_Time_req   Available for V1.0.3 or later                          
@@ -65,8 +66,8 @@
 static uint8_t DevEui[8];
 static uint8_t JoinEui[8];
 #else
-static uint8_t DevEui[] = LORAWAN_DEVICE_EUI;
-static uint8_t JoinEui[] = LORAWAN_JOIN_EUI;
+static uint8_t DevEui[8];
+static uint8_t JoinEui[8];
 #endif
 static uint8_t AppKey[] = LORAWAN_APP_KEY;
 static uint8_t NwkKey[] = LORAWAN_APP_KEY;
@@ -75,11 +76,11 @@ static MlmeReqJoin_t JoinParameters;
 
 #if( OVER_THE_AIR_ACTIVATION == 0 )
 
-static uint8_t FNwkSIntKey[] = LORAWAN_NWK_S_KEY;
-static uint8_t SNwkSIntKey[] = LORAWAN_NWK_S_KEY;
-static uint8_t NwkSEncKey[] = LORAWAN_NWK_S_KEY;
-static uint8_t AppSKey[] = LORAWAN_APP_S_KEY;
-static uint32_t DevAddr = LORAWAN_DEVICE_ADDRESS;
+static uint8_t FNwkSIntKey[16];
+static uint8_t SNwkSIntKey[16];
+static uint8_t NwkSEncKey[16];
+static uint8_t AppSKey[16];
+static uint32_t DevAddr;
 #endif
 
 #ifdef LORAMAC_CLASSB_ENABLED
@@ -460,6 +461,16 @@ static void MlmeIndication( MlmeIndication_t *MlmeIndication )
  */
 void LORA_Init (LoRaMainCallback_t *callbacks, LoRaParam_t* LoRaParam )
 {
+    myDevAddr(&DevAddr);
+    myDevEui(DevEui);
+    myAppEui(JoinEui);
+
+#if( OVER_THE_AIR_ACTIVATION == 0 )
+    myNwSkey(FNwkSIntKey);
+    myNwSkey(SNwkSIntKey);
+    myNwSkey(NwkSEncKey);
+    myAppSkey(AppSKey);
+#endif
   /* init the Tx Duty Cycle*/
   LoRaParamInit = LoRaParam;
   
