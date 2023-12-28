@@ -1500,7 +1500,8 @@ static void LoRaMacHandleIrqEvents( void )
             if(MacCtx.NvmCtx->PublicNetwork)
             {
 				printf("[%u] TX Timeout LRW\r\n", HAL_GetTick());
-            	ProcessRadioTxTimeout( );
+				HT_PB_SetState(SM_TX_TIMEOUT_LRW);
+				ProcessRadioTxTimeout( );
             }
             else
             {
@@ -1513,6 +1514,7 @@ static void LoRaMacHandleIrqEvents( void )
             if(MacCtx.NvmCtx->PublicNetwork)
             {
             	printf("[%u] RX Error LRW\r\n", HAL_GetTick());
+            	HT_PB_SetState(SM_RX_ERROR_LRW);
             	ProcessRadioRxError( );
             }
             else
