@@ -970,8 +970,8 @@ static void ProcessRadioRxDone( void )
 	for(uint8_t x=0; x<size;x++)
 		printf("%02x",payload[x]);
     printf("\r\n");
-	HT_PB_SetRxLRWSNR(snr);
-	HT_PB_SetRxLRWRSSI(rssi);
+	setRxLRWSNR(snr);
+	setRxLRWRSSI(rssi);
 		
 	
     uint8_t pktHeaderLen = 0;
@@ -1471,7 +1471,7 @@ static void LoRaMacHandleIrqEvents( void )
             else
             {
             	printf("[%u] TX Done P2P\r\n", HAL_GetTick() );
-            	HT_PB_SetState(SM_TX_DONE_P2P);
+            	setMachineState(SM_TX_DONE_P2P);
             }
         }
         if( events.Events.RxDone == 1 )
@@ -1479,7 +1479,7 @@ static void LoRaMacHandleIrqEvents( void )
             if(MacCtx.NvmCtx->PublicNetwork)
             {
 				printf("[%u] RX Done LRW\r\n", HAL_GetTick());
-            	HT_PB_SetState(SM_RX_DONE_LRW);
+            	setMachineState(SM_RX_DONE_LRW);
             	ProcessRadioRxDone( );
             }
             else
@@ -1490,8 +1490,8 @@ static void LoRaMacHandleIrqEvents( void )
 				rxData.size = RxDoneParams.Size;
 				rxData.rssi = RxDoneParams.Rssi;
 				rxData.snr = RxDoneParams.Snr;
-				HT_PB_SetRxP2P(&rxData);
-				HT_PB_SetState(SM_RX_DONE_P2P);
+				setRxP2P(&rxData);
+				setMachineState(SM_RX_DONE_P2P);
             }
 
         }
@@ -1500,13 +1500,13 @@ static void LoRaMacHandleIrqEvents( void )
             if(MacCtx.NvmCtx->PublicNetwork)
             {
 				printf("[%u] TX Timeout LRW\r\n", HAL_GetTick());
-				HT_PB_SetState(SM_TX_TIMEOUT_LRW);
+				setMachineState(SM_TX_TIMEOUT_LRW);
 				ProcessRadioTxTimeout( );
             }
             else
             {
             	printf("[%u] TX Timeout P2P\r\n", HAL_GetTick());
-            	HT_PB_SetState(SM_TX_TIMEOUT_P2P);
+            	setMachineState(SM_TX_TIMEOUT_P2P);
             }
         }
         if( events.Events.RxError == 1 )
@@ -1514,13 +1514,13 @@ static void LoRaMacHandleIrqEvents( void )
             if(MacCtx.NvmCtx->PublicNetwork)
             {
             	printf("[%u] RX Error LRW\r\n", HAL_GetTick());
-            	HT_PB_SetState(SM_RX_ERROR_LRW);
+            	setMachineState(SM_RX_ERROR_LRW);
             	ProcessRadioRxError( );
             }
             else
             {
             	printf("[%u] RX Error P2P\r\n", HAL_GetTick());
-            	HT_PB_SetState(SM_RX_ERROR_P2P);
+            	setMachineState(SM_RX_ERROR_P2P);
             }
         }
         if( events.Events.RxTimeout == 1 )
@@ -1529,12 +1529,12 @@ static void LoRaMacHandleIrqEvents( void )
             {
 				printf("[%u] RX Timeout LRW\r\n", HAL_GetTick());
             	ProcessRadioRxTimeout( );
-            	HT_PB_SetState(SM_RX_TIMEOUT_LRW);
+            	setMachineState(SM_RX_TIMEOUT_LRW);
             }
             else
             {
 				printf("[%u] RX Timeout P2P\r\n", HAL_GetTick());
-            	HT_PB_SetState(SM_RX_TIMEOUT_P2P);
+            	setMachineState(SM_RX_TIMEOUT_P2P);
             }
         }
 
@@ -1829,7 +1829,7 @@ static void OnRxWindow2TimerEvent( void* context )
 {
     // Check if we are processing Rx1 window.
     // If yes, we don't setup the Rx2 window.
-	HT_PB_SetLoraProcess(PROCESS_LORA_RX_WINDOW_2);
+	setLoraProcess(PROCESS_LORA_RX_WINDOW_2);
 	printf("[%u] ------------------ LRW RX2 ------------------\r\n", HAL_GetTick());
     if( MacCtx.RxSlot == RX_SLOT_WIN_1 )
     {
