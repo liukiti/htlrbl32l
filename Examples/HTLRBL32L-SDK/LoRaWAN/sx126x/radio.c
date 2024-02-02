@@ -970,7 +970,7 @@ void RadioStandby( void )
 
 void RadioRx( uint32_t timeout )
 {
-	printf("[%u] RX open for %lu ms \r\n",HAL_GetTick(), timeout);
+	printf("[LORA] RX open for %lu ms \r\n", timeout);
     SX126xSetDioIrqParams( IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_NONE,
