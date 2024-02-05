@@ -499,13 +499,13 @@ void LORA_Init (LoRaMainCallback_t *callbacks, LoRaParam_t* LoRaParam )
   DevAddr = randr( 0, 0x01FFFFFF );
 #endif
 
-    printf("Activation: ABP\r\n");
-	printf("DevEui= %02X%02X%02X%02X%02X%02X%02X%02X\r\n", HEX8(DevEui));
+    printf("[LORA] Activation: ABP\r\n");
+	printf("[LORA] DevEui: %02X%02X%02X%02X%02X%02X%02X%02X\r\n", HEX8(DevEui));
 
 #ifndef HT_CRYPTO
-  	printf("DevAdd=  %02lx\r\n",DevAddr);
-  	printf("NwkSKey= %02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\r\n", HEX16(NwkSEncKey));
-  	printf("AppSKey= %02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\r\n", HEX16(AppSKey));
+  	printf("[LORA] DevAdd:  %02lx\r\n",DevAddr);
+  	printf("[LORA]: %02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\r\n", HEX16(NwkSEncKey));
+  	printf("[LORA]: %02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\r\n", HEX16(AppSKey));
 #endif
 
 #endif
