@@ -504,8 +504,8 @@ void LORA_Init (LoRaMainCallback_t *callbacks, LoRaParam_t* LoRaParam )
 
 #ifndef HT_CRYPTO
   	printf("[LORA] DevAdd:  %02lx\r\n",DevAddr);
-  	printf("[LORA]: %02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\r\n", HEX16(NwkSEncKey));
-  	printf("[LORA]: %02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\r\n", HEX16(AppSKey));
+  	printf("[LORA] NwkSKey: %02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\r\n", HEX16(NwkSEncKey));
+  	printf("[LORA] AppSKey: %02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\r\n", HEX16(AppSKey));
 #endif
 
 #endif
